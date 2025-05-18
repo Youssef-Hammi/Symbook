@@ -1,0 +1,251 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block body %}
+<div class="container-fluid mt-4">
+    <h1 class="mb-4 text-center">Tableau de bord Administrateur</h1>
+
+    {# General Statistics #}
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Total Utilisateurs</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ totalUsers }}</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-header">Total Livres</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ totalBooks }}</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-header">Total Catégories</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ totalCategories }}</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-header">Total Commandes</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ totalOrders }}</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Financial and Sales Statistics #}
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card border-secondary mb-3">
+                <div class="card-header">Revenu Brut Total</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ totalIncome|number_format(2, '.', ',') }} €</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-secondary mb-3">
+                <div class="card-header">Total Livres Vendus</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ totalBooksSold|number_format(0, '.', ',') }}</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-secondary mb-3">
+                <div class="card-header">Valeur Moyenne Commande</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ averageOrderValue|number_format(2, '.', ',') }} €</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Top Items and Categories #}
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Livre le plus vendu</h5>
+                    {% if topBook %}
+                        <p class="card-text"><strong>ID:</strong> {{ topBook[0].id }}<br><strong>Titre:</strong> {{ topBook[0].title }}<br><strong>Quantité vendue:</strong> {{ topBook[1] }}</p>
+                    {% else %}
+                        <p class="card-text">Aucune vente enregistrée.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Catégorie la plus vendue</h5>
+                    {% if mostSoldCategory %}
+                        <p class="card-text"><strong>Nom:</strong> {{ mostSoldCategory.name }}<br><strong>Quantité vendue:</strong> {{ mostSoldCategory.totalQuantity }}</p>
+                    {% else %}
+                        <p class="card-text">Aucune vente enregistrée par catégorie.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Charts #}
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Répartition des Utilisateurs</h5>
+                    <canvas id="usersChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Commandes par mois</h5>
+                    <canvas id="ordersChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Commandes par Statut</h5>
+                    <canvas id="ordersStatusChart"></canvas>
+                </div>
+            </div>
+        </div>
+        {# You can add another chart or stats card here if needed #}
+         <div class="col-md-6">
+           
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Data from Symfony Controller
+    const ordersByMonthData = {{ ordersByMonth|json_encode|raw }};
+    const totalAdmins = {{ totalAdmins }};
+    const totalUsers = {{ totalUsers }};
+    const ordersByStatusData = {{ ordersByStatus|json_encode|raw }};
+
+    // Orders Chart (existing - updated to use processed data)
+    const ctxOrders = document.getElementById('ordersChart').getContext('2d');
+    const ordersChart = new Chart(ctxOrders, {
+        type: 'bar',
+        data: {
+            labels: ordersByMonthData.map(o => `${o.year}-${String(o.month).padStart(2, '0')}`), // Format labels as YYYY-MM
+            datasets: [{
+                label: 'Nombre de commandes',
+                data: ordersByMonthData.map(o => o.count),
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Nombre de Commandes'
+                    }
+                },
+                x:{
+                     title: {
+                        display: true,
+                        text: 'Mois'
+                    }
+                }
+            },
+             plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+
+    // Users Chart (existing - updated)
+    const ctxUsers = document.getElementById('usersChart').getContext('2d');
+    const usersChart = new Chart(ctxUsers, {
+        type: 'pie',
+        data: {
+            labels: ['Admins', 'Autres Utilisateurs'],
+            datasets: [{
+                data: [totalAdmins, totalUsers - totalAdmins],
+                backgroundColor: ['rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)'],
+                borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+             plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+                title: {
+                    display: true,
+                    text: 'Répartition des Utilisateurs'
+                }
+            }
+        }
+    });
+
+    // Orders by Status Chart (new)
+    const ctxOrdersStatus = document.getElementById('ordersStatusChart').getContext('2d');
+    const ordersStatusChart = new Chart(ctxOrdersStatus, {
+        type: 'pie',
+        data: {
+            labels: ordersByStatusData.map(item => item.status || 'Unknown Status'),
+            datasets: [{
+                data: ordersByStatusData.map(item => item.orderCount),
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.6)', // Green/Teal
+                    'rgba(255, 159, 64, 0.6)',  // Orange
+                    'rgba(255, 205, 86, 0.6)',  // Yellow
+                    'rgba(153, 102, 255, 0.6)', // Purple
+                    'rgba(201, 203, 207, 0.6)'  // Grey
+                ],
+                borderColor: [
+                     'rgba(75, 192, 192, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 205, 86, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(201, 203, 207, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+             plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+                 title: {
+                    display: true,
+                    text: 'Commandes par Statut'
+                }
+            }
+        }
+    });
+</script>
+{% endblock %} 

@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Order{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Détail de la commande #{{ order.id }}</h1>
+    <ul class="list-group mb-3">
+        <li class="list-group-item">Date : {{ order.createdAt|date('d/m/Y H:i') }}</li>
+        <li class="list-group-item">Statut : {{ order.status }}</li>
+        <li class="list-group-item">Total : {{ order.totalPrice }} €</li>
+        <li class="list-group-item">Méthode de paiement : {{ order.paymentMethod }}</li>
+    </ul>
+    <h3>Livres commandés</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Livre</th>
+                <th>Quantité</th>
+                <th>Prix unitaire</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order.orderItems %}
+                <tr>
+                    <td>{{ item.book.title }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.price }} €</td>
+                    <td>{{ item.price * item.quantity }} €</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="#" class="btn btn-primary">Payer avec Stripe</a>
+</div>
+
+    <a href="{{ path('app_order_index') }}">back to list</a>
+
+    <a href="{{ path('app_order_edit', {'id': order.id}) }}">edit</a>
+
+    {{ include('order/_delete_form.html.twig') }}
+{% endblock %}

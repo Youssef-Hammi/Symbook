@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<div class="container mt-4">
+    <h1>Vitrine des livres</h1>
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-4">
+            <input type="text" name="search" class="form-control" placeholder="Recherche par titre..." value="{{ search }}">
+        </div>
+        <div class="col-md-4">
+            <select name="category" class="form-select">
+                <option value="">Toutes les catégories</option>
+                {% for cat in categories %}
+                    <option value="{{ cat.id }}" {% if categoryId == cat.id %}selected{% endif %}>{{ cat.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-primary w-100">Rechercher</button>
+        </div>
+    </form>
+    <div class="row">
+        {% for book in books %}
+            <div class="col-md-3 mb-4">
+                <div class="card h-100">
+                    <img src="{{ book.image }}" class="card-img-top" alt="{{ book.title }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ book.title }}</h5>
+                        <p class="card-text">Auteur : {{ book.author }}</p>
+                        <p class="card-text">Prix : {{ book.price }} €</p>
+                        <a href="{{ path('app_book_show', {'id': book.id}) }}" class="btn btn-outline-primary btn-sm">Voir détail</a>
+                        <form action="{{ path('cartitem_add', {'bookId': book.id}) }}" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-success btn-sm">Ajouter au panier</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info">Aucun livre trouvé.</div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 

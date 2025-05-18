@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<div class="container mt-4">
+    <h1>Mon historique de commandes</h1>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Date</th>
+                <th>Statut</th>
+                <th>Total</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+                <tr>
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.createdAt|date('d/m/Y H:i') }}</td>
+                    <td>{{ order.status }}</td>
+                    <td>{{ order.totalPrice }} €</td>
+                    <td><a href="{{ path('order_show', {'id': order.id}) }}" class="btn btn-outline-primary btn-sm">Voir détail</a></td>
+                </tr>
+            {% else %}
+                <tr><td colspan="5">Aucune commande trouvée.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %} 

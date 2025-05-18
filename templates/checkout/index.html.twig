@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Validation de la commande</h1>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Détails de la livraison et paiement</h2>
+            {{ form_start(checkoutForm) }}
+                {{ form_row(checkoutForm.shippingName) }}
+                {{ form_row(checkoutForm.shippingAddress) }}
+                {{ form_row(checkoutForm.shippingCity) }}
+                {{ form_row(checkoutForm.shippingPostalCode) }}
+                {{ form_row(checkoutForm.paymentMethod) }}
+                {{ form_row(checkoutForm.submit) }}
+            {{ form_end(checkoutForm) }}
+        </div>
+
+        <div class="col-md-6">
+            <h2>Récapitulatif de la commande</h2>
+            <ul class="list-group">
+                {% for item in cartItems %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ item.book.title }} x {{ item.quantity }}
+                        <span class="badge bg-primary rounded-pill">{{ (item.book.price * item.quantity)|number_format(2, '.', ',') }} €</span>
+                    </li>
+                {% endfor %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <strong>Total de la commande</strong>
+                    <span class="badge bg-success rounded-pill"><strong>{{ totalPrice|number_format(2, '.', ',') }} €</strong></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %} 

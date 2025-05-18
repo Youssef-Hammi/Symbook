@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<div class="container mt-4">
+    <h1>Mon panier</h1>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Livre</th>
+                <th>Quantité</th>
+                <th>Prix unitaire</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% set total = 0 %}
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.book.title }}</td>
+                    <td>
+                        <form method="post" action="{{ path('cartitem_update_quantity', {'id': item.id, 'action': 'decrease'}) }}" style="display:inline">
+                            <button class="btn btn-sm btn-outline-secondary">-</button>
+                        </form>
+                        {{ item.quantity }}
+                        <form method="post" action="{{ path('cartitem_update_quantity', {'id': item.id, 'action': 'increase'}) }}" style="display:inline">
+                            <button class="btn btn-sm btn-outline-secondary">+</button>
+                        </form>
+                    </td>
+                    <td>{{ item.book.price }} €</td>
+                    <td>{{ item.book.price * item.quantity }} €</td>
+                    <td>
+                        <form method="post" action="{{ path('app_cart_item_delete', {'id': item.id}) }}" onsubmit="return confirm('Supprimer cet article ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ item.id) }}">
+                            <button class="btn btn-danger btn-sm">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+                {% set total = total + (item.book.price * item.quantity) %}
+            {% else %}
+                <tr><td colspan="5">Votre panier est vide.</td></tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="4" class="text-end">Total</th>
+                <th>{{ total }} €</th>
+            </tr>
+        </tfoot>
+    </table>
+    <a href="{{ path('app_checkout') }}" class="btn btn-success">Valider la commande</a>
+</div>
+{% endblock %} 
