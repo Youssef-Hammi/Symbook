@@ -1,9 +1,11 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-<div class="container mt-4">
-    <h1 class="mb-4">Mon panier</h1>
+<div class="container my-5">
+    <h1 class="text-center mb-4">Mon panier</h1>
 
+    <section class="cart-items">
     {% if items is not empty %}
+        <div class="table-responsive">
         <table class="table table-hover table-striped align-middle">
             <thead class="table-dark">
                 <tr>
@@ -31,12 +33,12 @@
                         </td>
                         <td>
                             <div class="d-flex justify-content-center align-items-center">
-                                <form method="post" action="{{ path('cartitem_update_quantity', {'id': item.id, 'action': 'decrease'}) }}" class="me-1">
-                                    <button class="btn btn-sm btn-outline-secondary" type="submit">-</button>
+                                <form method="post" action="{{ path('cartitem_update_quantity', {'id': item.id, 'action': 'decrease'}) }}" class="me-2">
+                                    <button class="btn btn-sm btn-outline-secondary" type="submit" aria-label="Decrease quantity">-</button>
                                 </form>
-                                <span>{{ item.quantity }}</span>
-                                <form method="post" action="{{ path('cartitem_update_quantity', {'id': item.id, 'action': 'increase'}) }}" class="ms-1">
-                                    <button class="btn btn-sm btn-outline-secondary" type="submit">+</button>
+                                <span class="mx-2">{{ item.quantity }}</span>
+                                <form method="post" action="{{ path('cartitem_update_quantity', {'id': item.id, 'action': 'increase'}) }}" class="ms-2">
+                                    <button class="btn btn-sm btn-outline-secondary" type="submit" aria-label="Increase quantity">+</button>
                                 </form>
                             </div>
                         </td>
@@ -45,7 +47,7 @@
                         <td>
                             <form method="post" action="{{ path('app_cart_item_delete', {'id': item.id}) }}" onsubmit="return confirm('Supprimer cet article de votre panier ?');">
                                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ item.id) }}">
-                                <button class="btn btn-danger btn-sm">Supprimer</button>
+                                <button class="btn btn-danger btn-sm" aria-label="Remove item">Supprimer<i class="bi bi-trash"></i></button>
                             </form>
                         </td>
                     </tr>
@@ -60,10 +62,11 @@
                 </tr>
             </tfoot>
         </table>
+        </div>
 
         <div class="text-end mt-3">
             <a href="{{ path('app_book_showcase') }}" class="btn btn-secondary me-2">Continuer mes achats</a>
-            <a href="{{ path('app_checkout') }}" class="btn btn-success">Valider la commande</a>
+            <a href="{{ path('app_checkout') }}" class="btn btn-success btn-lg">Valider la commande</a>
         </div>
     {% else %}
         <div class="alert alert-info" role="alert">
@@ -73,5 +76,6 @@
              <a href="{{ path('app_book_showcase') }}" class="btn btn-primary">Retour à la vitrine</a>
         </div>
     {% endif %}
+    </section>
 </div>
 {% endblock %} 

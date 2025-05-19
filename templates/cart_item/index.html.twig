@@ -3,33 +3,45 @@
 {% block title %}CartItem index{% endblock %}
 
 {% block body %}
-    <h1>CartItem index</h1>
+<div class="container my-5">
+    <h1 class="text-center mb-4">Gestion des Articles du Panier</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Quantity</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for cart_item in cart_items %}
-            <tr>
-                <td>{{ cart_item.id }}</td>
-                <td>{{ cart_item.quantity }}</td>
-                <td>
-                    <a href="{{ path('app_cart_item_show', {'id': cart_item.id}) }}">show</a>
-                    <a href="{{ path('app_cart_item_edit', {'id': cart_item.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <section class="cart-item-index">
+        <div class="mb-3">
+            <a href="{{ path('app_cart_item_new') }}" class="btn btn-success">Créer un nouvel Article</a>
+        </div>
 
-    <a href="{{ path('app_cart_item_new') }}">Create new</a>
+        <div class="table-responsive">
+            <table class="table table-hover table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Livre</th>
+                        <th>Client</th>
+                        <th>Quantity</th>
+                        <th>actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for cart_item in cart_items %}
+                    <tr>
+                        <td>{{ cart_item.id }}</td>
+                        <td>{{ cart_item.book.title | default('N/A') }}</td>
+                        <td>{{ cart_item.user.email | default('N/A') }}</td>
+                        <td>{{ cart_item.quantity }}</td>
+                        <td>
+                            <a href="{{ path('app_cart_item_show', {'id': cart_item.id}) }}" class="btn btn-info btn-sm me-1">show</a>
+                            <a href="{{ path('app_cart_item_edit', {'id': cart_item.id}) }}" class="btn btn-warning btn-sm">edit</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5">no records found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
 {% endblock %}

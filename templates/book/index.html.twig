@@ -3,39 +3,45 @@
 {% block title %}Book index{% endblock %}
 
 {% block body %}
-    <h1 class="mb-4">Gestion des Livres</h1>
+<main>
+    <section class="container mt-4">
+        <h1 class="mb-4 text-center">Gestion des Livres</h1>
 
-    <a href="{{ path('app_book_new') }}" class="btn btn-success mb-3">Créer un nouveau Livre</a>
+        <a href="{{ path('app_book_new') }}" class="btn btn-success mb-3">Créer un nouveau Livre</a>
 
-    <table class="table table-hover table-striped align-middle">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Price</th>
-                <th>Stock</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for book in books %}
-            <tr>
-                <td>{{ book.id }}</td>
-                <td>{{ book.title }}</td>
-                <td>{{ book.author }}</td>
-                <td>{{ book.price|number_format(2, ',', ' ') }} €</td>
-                <td>{{ book.stock }}</td>
-                <td>
-                    <a href="{{ path('app_book_show', {'id': book.id}) }}" class="btn btn-info btn-sm">show</a>
-                    <a href="{{ path('app_book_edit', {'id': book.id}) }}" class="btn btn-warning btn-sm">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="8">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <div class="table-responsive">
+            <table class="table table-hover table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for book in books %}
+                    <tr>
+                        <td>{{ book.id }}</td>
+                        <td>{{ book.title }}</td>
+                        <td>{{ book.author }}</td>
+                        <td>{{ book.price|number_format(2, ',', ' ') }} €</td>
+                        <td>{{ book.stock }}</td>
+                        <td>
+                            <a href="{{ path('app_book_show', {'id': book.id}) }}" class="btn btn-info btn-sm me-1">show</a>
+                            <a href="{{ path('app_book_edit', {'id': book.id}) }}" class="btn btn-warning btn-sm">edit</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8">no records found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
 {% endblock %}

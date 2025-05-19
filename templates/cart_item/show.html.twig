@@ -3,24 +3,36 @@
 {% block title %}CartItem{% endblock %}
 
 {% block body %}
-    <h1>CartItem</h1>
+<div class="container my-5">
+    <h1 class="text-center mb-4">Détail de l'article du panier</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ cart_item.id }}</td>
-            </tr>
-            <tr>
-                <th>Quantity</th>
-                <td>{{ cart_item.quantity }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <section class="cart-item-detail">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header">
+                Informations de l'article
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Id:</strong> {{ cart_item.id }}</li>
+                    {# Assuming a book relationship exists and has a title #}
+                    {% if cart_item.book is defined and cart_item.book is not null %}
+                        <li class="list-group-item"><strong>Livre:</strong> {{ cart_item.book.title }}</li>
+                    {% endif %}
+                    <li class="list-group-item"><strong>Quantité:</strong> {{ cart_item.quantity }}</li>
+                    {# Assuming a price is stored or can be calculated #}
+                    {% if cart_item.book is defined and cart_item.book is not null %}
+                        <li class="list-group-item"><strong>Prix unitaire:</strong> {{ cart_item.book.price|format_currency('EUR') }}</li>
+                        <li class="list-group-item"><strong>Sous-total:</strong> {{ (cart_item.quantity * cart_item.book.price)|format_currency('EUR') }}</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
 
-    <a href="{{ path('app_cart_item_index') }}">back to list</a>
-
-    <a href="{{ path('app_cart_item_edit', {'id': cart_item.id}) }}">edit</a>
-
-    {{ include('cart_item/_delete_form.html.twig') }}
+        <div class="mt-3 text-center">
+            <a href="{{ path('app_cart_item_index') }}" class="btn btn-secondary me-2">Retour à la liste</a>
+            <a href="{{ path('app_cart_item_edit', {'id': cart_item.id}) }}" class="btn btn-warning me-2">Modifier</a>
+            {{ include('cart_item/_delete_form.html.twig') }}
+        </div>
+    </section>
+</div>
 {% endblock %}

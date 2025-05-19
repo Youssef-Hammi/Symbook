@@ -20,12 +20,14 @@ security:
         main:
             lazy: true
             provider: app_user_provider
-            custom_authenticator: App\Security\AuthAuthenticator
+            custom_authenticator:
+                - App\Security\AuthAuthenticator
+                - App\Security\GoogleAuthenticator
+                - App\Security\FacebookAuthenticator
+                - App\Security\GithubAuthenticator
+            entry_point: App\Security\AuthAuthenticator
             logout:
                 path: app_logout
-                # where to redirect after logout
-                # target: app_any_route
-
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800
@@ -60,6 +62,12 @@ security:
         - { path: ^/order/$, roles: ROLE_ADMIN } # Restrict /order/ index
         # Allow anonymous access for Stripe webhooks
         - { path: ^/webhook/stripe, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # Route to initiate Google OAuth login handled by GoogleAuthenticator's start method
+        - { path: ^/connect/google, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # Route to initiate Facebook OAuth login handled by GoogleAuthenticator's start method
+        - { path: ^/connect/facebook, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # Route to initiate GitHub OAuth login handled by GoogleAuthenticator's start method
+        - { path: ^/connect/github, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         # Default: require authentication for all other pages not explicitly allowed or restricted
         - { path: ^/, roles: IS_AUTHENTICATED }
 

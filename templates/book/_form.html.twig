@@ -1,24 +1,38 @@
 {{ form_start(form) }}
-    <div class="my-3">
-        {{ form_row(form.title) }}
+    <div class="mb-3">
+        {{ form_label(form.title, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.title) }}
     </div>
-    <div class="my-3">
-        {{ form_row(form.author) }}
+    <div class="mb-3">
+        {{ form_label(form.author, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.author, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.author) }}
     </div>
-    <div class="my-3">
-        {{ form_row(form.price) }}
+    <div class="mb-3">
+        {{ form_label(form.price, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.price, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.price) }}
     </div>
-    <div class="my-3">
-        {{ form_row(form.description) }}
+    <div class="mb-3">
+        {{ form_label(form.description, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.description) }}
     </div>
-    <div class="my-3">
-        {{ form_row(form.category) }}
+    <div class="mb-3">
+        {{ form_label(form.category, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.category, {'attr': {'class': 'form-select'}}) }}
+        {{ form_errors(form.category) }}
     </div>
-    <div class="my-3">
-        {{ form_row(form.image) }}
+    <div class="mb-3">
+        {{ form_label(form.image, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.image) }}
     </div>
-    <div class="my-3">
-        {{ form_row(form.stock) }}
+    <div class="mb-3">
+        {{ form_label(form.stock, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.stock, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.stock) }}
     </div>
 
     <button class="btn btn-success mt-3">{{ button_label|default('Enregistrer') }}</button>

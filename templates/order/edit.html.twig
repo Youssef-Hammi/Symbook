@@ -3,16 +3,20 @@
 {% block title %}Edit Order{% endblock %}
 
 {% block body %}
-    <h1 class="mb-4">Modifier la Commande</h1>
+<div class="container my-5">
+    <h1 class="text-center mb-4">Modifier la Commande</h1>
 
+    <section class="order-edit">
     <div class="card shadow-sm mb-3">
         <div class="card-body">
             {{ include('order/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
         </div>
     </div>
 
-    <div class="mt-3">
+    <div class="mt-3 text-center">
         <a href="{{ path('app_order_index') }}" class="btn btn-secondary me-2">Retour à la liste</a>
         {{ include('order/_delete_form.html.twig') }}
     </div>
+    </section>
+</div>
 {% endblock %}

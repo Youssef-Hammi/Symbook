@@ -87,18 +87,11 @@ class CheckoutController extends AbstractController
                         $orderItem->setQuantity($cartItem->getQuantity());
                         $orderItem->setPrice($book->getPrice()); // Capture price at order time
 
-                        // Decrement book stock
-                        $currentStock = $book->getStock();
-                        $purchasedQuantity = $cartItem->getQuantity();
-                        $newStock = max(0, $currentStock - $purchasedQuantity);
-                        $book->setStock($newStock);
-
-                        $entityManager->persist($book); // Persist updated book (stock change)
+                        // Don't decrement stock here - will be done during finalize delivery
                         $entityManager->persist($orderItem); // Persist order item
-                        // DO NOT remove cart item here yet - only remove on successful payment confirmation
                     }
                 }
-                 // Flush pending changes (new order items, updated book stock)
+                 // Flush pending changes (new order items)
                 $entityManager->flush();
             }
 
@@ -175,13 +168,19 @@ class CheckoutController extends AbstractController
         foreach ($cartItems as $cartItem) {
             $book = $cartItem->getBook();
             if ($book) {
+                // Check if stock is sufficient
+                if ($book->getStock() < $cartItem->getQuantity()) {
+                    $this->addFlash('error', 'Stock insuffisant pour le livre: ' . $book->getTitle());
+                    return $this->redirectToRoute('order_history');
+                }
+
                 $orderItem = new \App\Entity\OrderItem();
                 $orderItem->setBook($book);
                 $orderItem->setOrder($order); // Link to the *current* order
                 $orderItem->setQuantity($cartItem->getQuantity());
                 $orderItem->setPrice($book->getPrice()); // Capture price at order time
 
-                // Decrement book stock
+                // Decrement book stock - only done here
                 $currentStock = $book->getStock();
                 $purchasedQuantity = $cartItem->getQuantity();
                 $newStock = max(0, $currentStock - $purchasedQuantity);

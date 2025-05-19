@@ -3,32 +3,71 @@
 {% block title %}Paiement par carte{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-    <h1>Paiement de la commande #{{ order.id }}</h1>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header text-center">
+                    <h1>Paiement de la commande #{{ order.id }}</h1>
+                </div>
+                <section class="checkout-card-payment">
+                <div class="card-body">
+                    <p class="text-center">Montant total : <strong>{{ order.totalPrice|number_format(2, '.', ',') }} €</strong></p>
+                    <hr>
+                    <p class="text-muted">Veuillez entrer vos informations de carte de crédit ci-dessous :</p>
 
-    <p>Montant total : {{ order.totalPrice|number_format(2, '.', ',') }} €</p>
+                    <form id="payment-form">
+                        <div class="mb-3">
+                            <div id="card-element"><!-- Stripe Elements will be injected here --></div>
+                        </div>
 
-    <form id="payment-form">
-        <div id="card-element"><!-- Stripe Elements will be injected here --></div>
+                        <!-- Used to display form errors -->
+                        <div id="card-errors" role="alert" class="alert alert-danger mt-3" style="display: none;"></div>
 
-        <!-- Used to display form errors -->
-        <div id="card-errors" role="alert" class="text-danger mt-3"></div>
-
-        <button id="submit-button" class="btn btn-success mt-4">Payer</button>
-    </form>
+                        <button id="submit-button" class="btn btn-success btn-lg w-100 mt-4">Payer</button>
+                    </form>
+                </div>
+                </section>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="https://js.stripe.com/v3/"></script>
 <script>
     const stripe = Stripe('{{ stripePublicKey }}');
     const elements = stripe.elements();
-    const cardElement = elements.create('card');
+    const cardElement = elements.create('card', {
+         style: { // Optional: Customize the appearance of the card element
+            base: {
+                fontSize: '16px',
+                color: '#32325d',
+                '::placeholder': {
+                    color: '#aab7c4',
+                },
+            },
+            invalid: {
+                color: '#fa755a',
+                iconColor: '#fa755a',
+            },
+        },
+    });
 
     cardElement.mount('#card-element');
 
     const form = document.getElementById('payment-form');
     const cardErrors = document.getElementById('card-errors');
     const submitButton = document.getElementById('submit-button');
+
+    cardElement.addEventListener('change', function(event) {
+        if (event.error) {
+            cardErrors.textContent = event.error.message;
+            cardErrors.style.display = 'block';
+        } else {
+            cardErrors.textContent = '';
+            cardErrors.style.display = 'none';
+        }
+    });
 
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -45,6 +84,7 @@
         if (error) {
             // Show error to your customer (e.g., insufficient funds)
             cardErrors.textContent = error.message;
+            cardErrors.style.display = 'block';
             submitButton.disabled = false;
         } else {
             // The payment has been processed!
@@ -60,6 +100,7 @@
             } else {
                  // Handle any other PaymentIntent status or show error
                  cardErrors.textContent = 'Payment failed with status: ' + paymentIntent.status;
+                 cardErrors.style.display = 'block';
                  submitButton.disabled = false;
             }
         }

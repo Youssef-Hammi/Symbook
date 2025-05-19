@@ -3,9 +3,15 @@
 {% block title %}New CartItem{% endblock %}
 
 {% block body %}
-    <h1>Create new CartItem</h1>
+<div class="container my-5">
+    <h1 class="text-center mb-4">Créer un nouvel article de panier</h1>
 
-    {{ include('cart_item/_form.html.twig') }}
+    <section class="cart-item-new">
+        {{ include('cart_item/_form.html.twig') }}
 
-    <a href="{{ path('app_cart_item_index') }}">back to list</a>
+        <div class="mt-3 text-center">
+            <a href="{{ path('app_cart_item_index') }}" class="btn btn-secondary">Retour à la liste</a>
+        </div>
+    </section>
+</div>
 {% endblock %}

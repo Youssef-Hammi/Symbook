@@ -1,4 +1,5 @@
 {{ form_start(form) }}
+<div class="form-section mb-4">
     <div class="my-3">
         {{ form_row(form.user) }}
     </div>
@@ -17,6 +18,7 @@
     <div class="my-3">
         {{ form_row(form.shippingAddress) }}
     </div>
+</div>
 
     <button class="btn btn-success mt-3">{{ button_label|default('Enregistrer') }}</button>
 {{ form_end(form) }}

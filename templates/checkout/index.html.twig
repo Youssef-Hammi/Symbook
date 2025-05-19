@@ -3,63 +3,62 @@
 {% block title %}Checkout{% endblock %}
 
 {% block body %}
-    <div class="container mt-4">
-        <h1>Récapitulatif de la commande</h1>
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Récapitulatif de la commande</h1>
 
         {% if cartItems is not empty %}
-            <div class="card shadow-sm mb-4">
-                <div class="card-header">
-                    Articles dans le panier
-                </div>
-                <div class="card-body">
-                    <ul class="list-group list-group-flush">
-                        {% for item in cartItems %}
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <div>
-                                    {{ item.book.title }} - {{ item.quantity }} x {{ item.book.price | format_currency('EUR') }}
-                                </div>
-                                <span>{{ (item.quantity * item.book.price) | format_currency('EUR') }}</span>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                <div class="card-footer d-flex justify-content-between">
-                    <strong>Total:</strong>
-                    <strong>{{ totalPrice | format_currency('EUR') }}</strong>
-                </div>
-            </div>
-
-            <div class="card shadow-sm mb-4">
-                <div class="card-header">
-                    Informations de livraison
-                </div>
-                <div class="card-body">
-                    {{ form_start(shippingForm) }}
-                        {{ form_row(shippingForm.shippingName) }}
-                        {{ form_row(shippingForm.shippingAddress) }}
-                        {{ form_row(shippingForm.shippingCity) }}
-                        {{ form_row(shippingForm.shippingPostalCode) }}
-                        {{ form_row(shippingForm.shippingPhone) }}
-
-                        <h4>Méthode de paiement</h4>
-
-                        <div class="mb-3">
-                            <button type="submit" class="btn btn-primary me-2">Payer à la livraison</button>
-                            {# This button/link needs to lead to a Stripe payment initiation process #}
-                            {# For now, it's just a placeholder visual representation #}
-                            <a href="#" class="btn btn-secondary disabled" aria-disabled="true">Payer par carte (Stripe)</a>
-                             <small class="form-text text-muted">Stripe integration coming soon.</small>
+            <section class="checkout-summary-shipping">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-header">
+                                Articles dans le panier
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush">
+                                    {% for item in cartItems %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                {{ item.book.title }} - {{ item.quantity }} x {{ item.book.price | format_currency('EUR') }}
+                                            </div>
+                                            <span>{{ (item.quantity * item.book.price) | format_currency('EUR') }}</span>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="card-footer d-flex justify-content-between">
+                                <strong>Total:</strong>
+                                <strong>{{ totalPrice | format_currency('EUR') }}</strong>
+                            </div>
                         </div>
+                    </div>
 
-                    {{ form_end(shippingForm) }}
+                    <div class="col-md-6">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-header">
+                                Informations de livraison
+                            </div>
+                            <div class="card-body">
+                                {{ form_start(shippingForm) }}
+                                    {{ form_row(shippingForm.shippingName) }}
+                                    {{ form_row(shippingForm.shippingAddress) }}
+                                    {{ form_row(shippingForm.shippingCity) }}
+                                    {{ form_row(shippingForm.shippingPostalCode) }}
+                                    {{ form_row(shippingForm.shippingPhone) }}
+
+
+                                {{ form_end(shippingForm) }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </section>
 
         {% else %}
-            <div class="alert alert-info" role="alert">
+            <div class="alert alert-info text-center" role="alert">
                 Votre panier est vide. Ajoutez des articles avant de passer commande.
             </div>
-             <a href="{{ path('app_book_showcase') }}" class="btn btn-primary">Explorer les livres</a>
+             <div class="text-center"><a href="{{ path('app_book_showcase') }}" class="btn btn-primary">Explorer les livres</a></div>
         {% endif %}
     </div>
 {% endblock %} 

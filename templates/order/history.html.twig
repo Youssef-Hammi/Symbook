@@ -1,10 +1,12 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-<div class="container mt-4">
-    <h1 class="mb-4">Mon historique de commandes</h1>
+<div class="container my-5">
+    <h1 class="text-center mb-4">Mon historique de commandes</h1>
 
+    <section class="order-history">
     {% if orders is not empty %}
-        <table class="table table-hover table-striped align-middle">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped align-middle">
              <thead class="table-dark">
                 <tr>
                     <th>Numéro de commande</th>
@@ -26,6 +28,7 @@
                 {% endfor %}
             </tbody>
         </table>
+        </div>
     {% else %}
         <div class="alert alert-info" role="alert">
             Vous n'avez pas encore passé de commande.
@@ -34,5 +37,6 @@
              <a href="{{ path('app_book_showcase') }}" class="btn btn-primary">Parcourir les livres</a>
          </div>
     {% endif %}
+    </section>
 </div>
 {% endblock %} 

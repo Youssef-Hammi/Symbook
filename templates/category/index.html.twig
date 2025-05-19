@@ -3,35 +3,41 @@
 {% block title %}Category index{% endblock %}
 
 {% block body %}
-    <h1 class="mb-4">Gestion des Catégories</h1>
+<main>
+    <section class="container mt-4">
+        <h1 class="mb-4 text-center">Gestion des Catégories</h1>
 
-    <a href="{{ path('app_category_new') }}" class="btn btn-success mb-3">Créer une nouvelle Catégorie</a>
+        <a href="{{ path('app_category_new') }}" class="btn btn-success mb-3">Créer une nouvelle Catégorie</a>
 
-    <table class="table table-hover table-striped align-middle">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Slug</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for category in categories %}
-            <tr>
-                <td>{{ category.id }}</td>
-                <td>{{ category.name }}</td>
-                <td>{{ category.slug }}</td>
-                <td>
-                    <a href="{{ path('app_category_show', {'id': category.id}) }}" class="btn btn-info btn-sm">show</a>
-                    <a href="{{ path('app_category_edit', {'id': category.id}) }}" class="btn btn-warning btn-sm">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <div class="table-responsive">
+            <table class="table table-hover table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Slug</th>
+                        <th>actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for category in categories %}
+                    <tr>
+                        <td>{{ category.id }}</td>
+                        <td>{{ category.name }}</td>
+                        <td>{{ category.slug }}</td>
+                        <td>
+                            <a href="{{ path('app_category_show', {'id': category.id}) }}" class="btn btn-info btn-sm me-1">show</a>
+                            <a href="{{ path('app_category_edit', {'id': category.id}) }}" class="btn btn-warning btn-sm">edit</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5">no records found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
 {% endblock %}

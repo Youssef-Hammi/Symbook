@@ -3,15 +3,19 @@
 {% block title %}New Category{% endblock %}
 
 {% block body %}
-    <h1 class="mb-4">Créer une nouvelle Catégorie</h1>
+<main>
+    <section class="container mt-4">
+        <h1 class="mb-4 text-center">Créer une nouvelle Catégorie</h1>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
-            {{ include('category/_form.html.twig') }}
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {{ include('category/_form.html.twig') }}
+            </div>
         </div>
-    </div>
 
-    <div class="mt-3">
-        <a href="{{ path('app_category_index') }}" class="btn btn-secondary">Retour à la liste</a>
-    </div>
+        <div class="mt-3">
+            <a href="{{ path('app_category_index') }}" class="btn btn-secondary">Retour à la liste</a>
+        </div>
+    </section>
+</main>
 {% endblock %}
