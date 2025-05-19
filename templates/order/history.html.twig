@@ -1,30 +1,38 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 <div class="container mt-4">
-    <h1>Mon historique de commandes</h1>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Date</th>
-                <th>Statut</th>
-                <th>Total</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for order in orders %}
+    <h1 class="mb-4">Mon historique de commandes</h1>
+
+    {% if orders is not empty %}
+        <table class="table table-hover table-striped align-middle">
+             <thead class="table-dark">
                 <tr>
-                    <td>{{ order.id }}</td>
-                    <td>{{ order.createdAt|date('d/m/Y H:i') }}</td>
-                    <td>{{ order.status }}</td>
-                    <td>{{ order.totalPrice }} €</td>
-                    <td><a href="{{ path('order_show', {'id': order.id}) }}" class="btn btn-outline-primary btn-sm">Voir détail</a></td>
+                    <th>Numéro de commande</th>
+                    <th>Date</th>
+                    <th>Statut</th>
+                    <th>Total</th>
+                    <th></th> {# Actions column #}
                 </tr>
-            {% else %}
-                <tr><td colspan="5">Aucune commande trouvée.</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.createdAt|date('d/m/Y H:i') }}</td>
+                        <td><span class="badge bg-secondary">{{ order.status }}</span></td>
+                        <td>{{ order.totalPrice|number_format(2, ',', ' ') }} €</td>
+                        <td><a href="{{ path('app_order_show', {'id': order.id}) }}" class="btn btn-info btn-sm">Voir détail</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            Vous n'avez pas encore passé de commande.
+        </div>
+         <div class="text-center mt-4">
+             <a href="{{ path('app_book_showcase') }}" class="btn btn-primary">Parcourir les livres</a>
+         </div>
+    {% endif %}
 </div>
 {% endblock %} 

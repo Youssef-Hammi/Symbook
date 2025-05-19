@@ -3,15 +3,16 @@
 {% block title %}Category index{% endblock %}
 
 {% block body %}
-    <h1>Category index</h1>
+    <h1 class="mb-4">Gestion des Catégories</h1>
 
-    <table class="table">
+    <a href="{{ path('app_category_new') }}" class="btn btn-success mb-3">Créer une nouvelle Catégorie</a>
+
+    <table class="table table-hover table-striped align-middle">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Name</th>
                 <th>Slug</th>
-                <th>Description</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -21,10 +22,9 @@
                 <td>{{ category.id }}</td>
                 <td>{{ category.name }}</td>
                 <td>{{ category.slug }}</td>
-                <td>{{ category.description }}</td>
                 <td>
-                    <a href="{{ path('app_category_show', {'id': category.id}) }}">show</a>
-                    <a href="{{ path('app_category_edit', {'id': category.id}) }}">edit</a>
+                    <a href="{{ path('app_category_show', {'id': category.id}) }}" class="btn btn-info btn-sm">show</a>
+                    <a href="{{ path('app_category_edit', {'id': category.id}) }}" class="btn btn-warning btn-sm">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -34,6 +34,4 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_category_new') }}">Create new</a>
 {% endblock %}

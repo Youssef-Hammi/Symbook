@@ -1,42 +1,46 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 <div class="container mt-4">
-    <h1>Vitrine des livres</h1>
-    <form method="get" class="row g-3 mb-4">
+    <h1 class="mb-4">Vitrine des livres</h1>
+    <form method="get" class="row g-3 mb-4 align-items-end">
         <div class="col-md-4">
-            <input type="text" name="search" class="form-control" placeholder="Recherche par titre..." value="{{ search }}">
+            <label for="searchInput" class="form-label">Recherche par titre</label>
+            <input type="text" name="search" id="searchInput" class="form-control" placeholder="Entrez un titre..." value="{{ search }}">
         </div>
         <div class="col-md-4">
-            <select name="category" class="form-select">
+            <label for="categorySelect" class="form-label">Catégorie</label>
+            <select name="category" id="categorySelect" class="form-select">
                 <option value="">Toutes les catégories</option>
                 {% for cat in categories %}
-                    <option value="{{ cat.id }}" {% if categoryId == cat.id %}selected{% endif %}>{{ cat.name }}</option>
+                    <option value="{{ cat.id }}" {% if categoryId is not null and categoryId == cat.id %}selected{% endif %}>{{ cat.name }}</option>
                 {% endfor %}
             </select>
         </div>
         <div class="col-md-4">
-            <button class="btn btn-primary w-100">Rechercher</button>
+            <button type="submit" class="btn btn-primary w-100">Rechercher</button>
         </div>
     </form>
-    <div class="row">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
         {% for book in books %}
-            <div class="col-md-3 mb-4">
-                <div class="card h-100">
-                    <img src="{{ book.image }}" class="card-img-top" alt="{{ book.title }}">
-                    <div class="card-body">
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ book.image }}" class="card-img-top" alt="{{ book.title }}" style="height: 200px; object-fit: cover;">
+                    <div class="card-body d-flex flex-column">
                         <h5 class="card-title">{{ book.title }}</h5>
-                        <p class="card-text">Auteur : {{ book.author }}</p>
-                        <p class="card-text">Prix : {{ book.price }} €</p>
-                        <a href="{{ path('app_book_show', {'id': book.id}) }}" class="btn btn-outline-primary btn-sm">Voir détail</a>
-                        <form action="{{ path('cartitem_add', {'bookId': book.id}) }}" method="post" class="d-inline">
-                            <button type="submit" class="btn btn-success btn-sm">Ajouter au panier</button>
-                        </form>
+                        <p class="card-text text-muted">Auteur : {{ book.author }}</p>
+                        <p class="card-text fw-bold">Prix : {{ book.price }} €</p>
+                        <div class="mt-auto">
+                            <a href="{{ path('app_book_show', {'id': book.id}) }}" class="btn btn-outline-secondary btn-sm me-2">Voir détail</a>
+                            <form action="{{ path('cartitem_add', {'bookId': book.id}) }}" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-success btn-sm">Ajouter au panier</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         {% else %}
             <div class="col-12">
-                <div class="alert alert-info">Aucun livre trouvé.</div>
+                <div class="alert alert-info" role="alert">Aucun livre trouvé.</div>
             </div>
         {% endfor %}
     </div>

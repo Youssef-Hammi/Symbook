@@ -3,36 +3,28 @@
 {% block title %}User{% endblock %}
 
 {% block body %}
-    <h1>User</h1>
+    <h1 class="mb-4">Utilisateur: {{ user.email }}</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ user.id }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ user.email }}</td>
-            </tr>
-            <tr>
-                <th>Roles</th>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-            </tr>
-            <tr>
-                <th>Password</th>
-                <td>{{ user.password }}</td>
-            </tr>
-            <tr>
-                <th>IsVerified</th>
-                <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">
+            Détails de l'utilisateur
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>ID:</strong> {{ user.id }}</li>
+                <li class="list-group-item"><strong>Email:</strong> {{ user.email }}</li>
+                <li class="list-group-item"><strong>Roles:</strong>
+                    {% for role in user.roles %}
+                        <span class="badge bg-info me-1">{{ role }}</span>
+                    {% endfor %}
+                </li>
+                <li class="list-group-item"><strong>Vérifié:</strong> {{ user.isVerified ? '<span class="badge bg-success">Oui</span>' : '<span class="badge bg-danger">Non</span>' }}</li>
+            </ul>
+        </div>
+    </div>
 
-    <a href="{{ path('app_user_index') }}">back to list</a>
-
-    <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
-
-    {{ include('user/_delete_form.html.twig') }}
+    <div class="mt-3">
+        <a href="{{ path('app_user_index') }}" class="btn btn-secondary me-2">Retour à la liste</a>
+        {{ include('user/_delete_form.html.twig') }}
+    </div>
 {% endblock %}

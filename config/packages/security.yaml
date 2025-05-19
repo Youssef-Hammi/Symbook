@@ -12,6 +12,11 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        # Dedicated firewall for Stripe webhooks to bypass security (including CSRF)
+        webhook:
+            pattern: ^/webhook/stripe
+            security: false
+            stateless: true # Webhooks are stateless
         main:
             lazy: true
             provider: app_user_provider
@@ -53,6 +58,8 @@ security:
         - { path: ^/category, roles: ROLE_ADMIN }
         - { path: ^/user, roles: ROLE_ADMIN }
         - { path: ^/order/$, roles: ROLE_ADMIN } # Restrict /order/ index
+        # Allow anonymous access for Stripe webhooks
+        - { path: ^/webhook/stripe, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         # Default: require authentication for all other pages not explicitly allowed or restricted
         - { path: ^/, roles: IS_AUTHENTICATED }
 

@@ -3,41 +3,56 @@
 {% block title %}Order{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-    <h1>Détail de la commande #{{ order.id }}</h1>
-    <ul class="list-group mb-3">
-        <li class="list-group-item">Date : {{ order.createdAt|date('d/m/Y H:i') }}</li>
-        <li class="list-group-item">Statut : {{ order.status }}</li>
-        <li class="list-group-item">Total : {{ order.totalPrice }} €</li>
-        <li class="list-group-item">Méthode de paiement : {{ order.paymentMethod }}</li>
-    </ul>
-    <h3>Livres commandés</h3>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Livre</th>
-                <th>Quantité</th>
-                <th>Prix unitaire</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in order.orderItems %}
-                <tr>
-                    <td>{{ item.book.title }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>{{ item.price }} €</td>
-                    <td>{{ item.price * item.quantity }} €</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <a href="#" class="btn btn-primary">Payer avec Stripe</a>
-</div>
+    <h1 class="mb-4">Détail de la commande #{{ order.id }}</h1>
 
-    <a href="{{ path('app_order_index') }}">back to list</a>
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">
+            Informations générales
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Client:</strong> {{ order.user.email }}</li> {# Assuming Order entity has a user relationship #}
+                <li class="list-group-item"><strong>Date:</strong> {{ order.createdAt|date('d/m/Y H:i') }}</li>
+                <li class="list-group-item"><strong>Statut:</strong> <span class="badge bg-secondary">{{ order.status }}</span></li>
+                <li class="list-group-item"><strong>Total:</strong> {{ order.totalPrice|number_format(2, ',', ' ') }} €</li>
+                <li class="list-group-item"><strong>Méthode de paiement:</strong> {{ order.paymentMethod }}</li>
+                 <li class="list-group-item"><strong>Adresse de livraison:</strong> {{ order.shippingAddress }}</li>{# Assuming shipping address exists #}
+                 <li class="list-group-item"><strong>Nom de livraison:</strong> {{ order.shippingName }}</li>{# Assuming shipping name exists #}
+            </ul>
+        </div>
+    </div>
 
-    <a href="{{ path('app_order_edit', {'id': order.id}) }}">edit</a>
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">
+            Livres commandés
+        </div>
+        <div class="card-body">
+            <table class="table table-hover table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th>Livre</th>
+                        <th>Quantité</th>
+                        <th>Prix unitaire</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.orderItems %}
+                        <tr>
+                            <td><a href="{{ path('app_book_show', {'id': item.book.id}) }}">{{ item.book.title }}</a></td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.price|number_format(2, ',', ' ') }} €</td>
+                            <td>{{ (item.price * item.quantity)|number_format(2, ',', ' ') }} €</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-    {{ include('order/_delete_form.html.twig') }}
+    <div class="mt-3">
+        <a href="{{ path('app_order_index') }}" class="btn btn-secondary me-2">Retour à la liste</a>
+        <a href="{{ path('app_order_edit', {'id': order.id}) }}" class="btn btn-warning me-2">Modifier</a>
+        {{ include('order/_delete_form.html.twig') }}
+    </div>
 {% endblock %}

@@ -3,37 +3,63 @@
 {% block title %}Checkout{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-    <h1>Validation de la commande</h1>
+    <div class="container mt-4">
+        <h1>Récapitulatif de la commande</h1>
 
-    <div class="row">
-        <div class="col-md-6">
-            <h2>Détails de la livraison et paiement</h2>
-            {{ form_start(checkoutForm) }}
-                {{ form_row(checkoutForm.shippingName) }}
-                {{ form_row(checkoutForm.shippingAddress) }}
-                {{ form_row(checkoutForm.shippingCity) }}
-                {{ form_row(checkoutForm.shippingPostalCode) }}
-                {{ form_row(checkoutForm.paymentMethod) }}
-                {{ form_row(checkoutForm.submit) }}
-            {{ form_end(checkoutForm) }}
-        </div>
+        {% if cartItems is not empty %}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    Articles dans le panier
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for item in cartItems %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    {{ item.book.title }} - {{ item.quantity }} x {{ item.book.price | format_currency('EUR') }}
+                                </div>
+                                <span>{{ (item.quantity * item.book.price) | format_currency('EUR') }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="card-footer d-flex justify-content-between">
+                    <strong>Total:</strong>
+                    <strong>{{ totalPrice | format_currency('EUR') }}</strong>
+                </div>
+            </div>
 
-        <div class="col-md-6">
-            <h2>Récapitulatif de la commande</h2>
-            <ul class="list-group">
-                {% for item in cartItems %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        {{ item.book.title }} x {{ item.quantity }}
-                        <span class="badge bg-primary rounded-pill">{{ (item.book.price * item.quantity)|number_format(2, '.', ',') }} €</span>
-                    </li>
-                {% endfor %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <strong>Total de la commande</strong>
-                    <span class="badge bg-success rounded-pill"><strong>{{ totalPrice|number_format(2, '.', ',') }} €</strong></span>
-                </li>
-            </ul>
-        </div>
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    Informations de livraison
+                </div>
+                <div class="card-body">
+                    {{ form_start(shippingForm) }}
+                        {{ form_row(shippingForm.shippingName) }}
+                        {{ form_row(shippingForm.shippingAddress) }}
+                        {{ form_row(shippingForm.shippingCity) }}
+                        {{ form_row(shippingForm.shippingPostalCode) }}
+                        {{ form_row(shippingForm.shippingPhone) }}
+
+                        <h4>Méthode de paiement</h4>
+
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary me-2">Payer à la livraison</button>
+                            {# This button/link needs to lead to a Stripe payment initiation process #}
+                            {# For now, it's just a placeholder visual representation #}
+                            <a href="#" class="btn btn-secondary disabled" aria-disabled="true">Payer par carte (Stripe)</a>
+                             <small class="form-text text-muted">Stripe integration coming soon.</small>
+                        </div>
+
+                    {{ form_end(shippingForm) }}
+                </div>
+            </div>
+
+        {% else %}
+            <div class="alert alert-info" role="alert">
+                Votre panier est vide. Ajoutez des articles avant de passer commande.
+            </div>
+             <a href="{{ path('app_book_showcase') }}" class="btn btn-primary">Explorer les livres</a>
+        {% endif %}
     </div>
-</div>
 {% endblock %} 

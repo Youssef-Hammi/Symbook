@@ -3,16 +3,20 @@
 {% block title %}Order index{% endblock %}
 
 {% block body %}
-    <h1>Order index</h1>
+    <h1 class="mb-4">Gestion des Commandes</h1>
 
-    <table class="table">
+    {# Creating orders from admin might be less common, but keep the link for completeness #}
+    <a href="{{ path('app_order_new') }}" class="btn btn-success mb-3">Créer une nouvelle Commande</a>
+
+    <table class="table table-hover table-striped align-middle">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>CreatedAt</th>
-                <th>Status</th>
-                <th>TotalPrice</th>
-                <th>PaymentMethod</th>
+                <th>Client</th>
+                <th>Date</th>
+                <th>Statut</th>
+                <th>Total</th>
+                <th>Payment Method</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -20,22 +24,21 @@
         {% for order in orders %}
             <tr>
                 <td>{{ order.id }}</td>
-                <td>{{ order.createdAt ? order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ order.status }}</td>
-                <td>{{ order.totalPrice }}</td>
+                <td>{{ order.user.email }}</td> {# Assuming Order entity has a user relationship #}
+                <td>{{ order.createdAt ? order.createdAt|date('d/m/Y H:i') : '' }}</td>
+                <td><span class="badge bg-secondary">{{ order.status }}</span></td>
+                <td>{{ order.totalPrice|number_format(2, ',', ' ') }} €</td>
                 <td>{{ order.paymentMethod }}</td>
                 <td>
-                    <a href="{{ path('app_order_show', {'id': order.id}) }}">show</a>
-                    <a href="{{ path('app_order_edit', {'id': order.id}) }}">edit</a>
+                    <a href="{{ path('app_order_show', {'id': order.id}) }}" class="btn btn-info btn-sm">show</a>
+                    <a href="{{ path('app_order_edit', {'id': order.id}) }}" class="btn btn-warning btn-sm">edit</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="6">no records found</td>
+                <td colspan="7">no records found</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_order_new') }}">Create new</a>
 {% endblock %}

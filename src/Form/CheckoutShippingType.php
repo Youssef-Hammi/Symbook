@@ -6,39 +6,37 @@ use App\Entity\Order;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class OrderType extends AbstractType
+class CheckoutShippingType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('createdAt')
-            ->add('status', ChoiceType::class, [
-                'choices' => [
-                    'Pending' => 'pending',
-                    'Processing' => 'processing',
-                    'Shipped' => 'shipped',
-                    'Completed' => 'completed',
-                    'Cancelled' => 'cancelled',
-                ],
-                'label' => 'Statut',
-            ])
-            ->add('totalPrice')
-            ->add('paymentMethod')
-            ->add('user')
             ->add('shippingName', TextType::class, [
-                'label' => 'Nom de livraison',
+                'label' => 'Nom complet',
+                'required' => true,
             ])
             ->add('shippingAddress', TextType::class, [
-                'label' => 'Adresse de livraison',
+                'label' => 'Adresse',
+                'required' => true,
             ])
             ->add('shippingCity', TextType::class, [
-                'label' => 'Ville de livraison',
+                'label' => 'Ville',
+                'required' => true,
             ])
             ->add('shippingPostalCode', TextType::class, [
-                'label' => 'Code postal de livraison',
+                'label' => 'Code postal',
+                'required' => true,
+            ])
+            ->add('shippingPhone', TextType::class, [
+                'label' => 'Numéro de téléphone',
+                'required' => false, // Phone might be optional
+            ])
+            ->add('save', SubmitType::class, [
+                'label' => 'Passer la commande',
+                'attr' => ['class' => 'btn btn-success btn-lg mt-3'],
             ])
         ;
     }
@@ -49,4 +47,4 @@ class OrderType extends AbstractType
             'data_class' => Order::class,
         ]);
     }
-}
+} 

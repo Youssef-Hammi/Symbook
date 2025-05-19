@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use App\Repository\CartItemRepository;
 use App\Entity\OrderItem;
+use App\Repository\BookRepository;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Psr\Log\LoggerInterface;
@@ -73,10 +74,28 @@ class OrderController extends AbstractController
     #[Route('/{id}/edit', name: 'app_order_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Order $order, EntityManagerInterface $entityManager): Response
     {
+        // Store the original status before handling the form
+        $originalStatus = $order->getStatus();
+
         $form = $this->createForm(OrderType::class, $order);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Check if the status has changed to 'cancelled'
+            if ($originalStatus !== 'cancelled' && $order->getStatus() === 'cancelled') {
+                // Restore book stock for each order item
+                foreach ($order->getOrderItems() as $orderItem) {
+                    $book = $orderItem->getBook();
+                    if ($book) {
+                        $currentStock = $book->getStock();
+                        $quantity = $orderItem->getQuantity();
+                        $newStock = $currentStock + $quantity;
+                        $book->setStock($newStock);
+                        $entityManager->persist($book); // Persist the updated book entity
+                    }
+                }
+            }
+
             $entityManager->flush();
 
             return $this->redirectToRoute('app_order_index', [], Response::HTTP_SEE_OTHER);

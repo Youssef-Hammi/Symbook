@@ -32,6 +32,13 @@ class OrderItem
         return $this->id;
     }
 
+    public function setId(?int $id): static
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
     public function getQuantity(): ?int
     {
         return $this->quantity;
@@ -52,6 +59,30 @@ class OrderItem
     public function setPrice(float $price): static
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    public function getBook(): ?Book
+    {
+        return $this->book;
+    }
+
+    public function setBook(?Book $book): static
+    {
+        $this->book = $book;
+
+        return $this;
+    }
+
+    public function getOrder(): ?Order
+    {
+        return $this->order;
+    }
+
+    public function setOrder(?Order $order): static
+    {
+        $this->order = $order;
 
         return $this;
     }

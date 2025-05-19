@@ -1,4 +1,25 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    <div class="my-3">
+        {{ form_row(form.title) }}
+    </div>
+    <div class="my-3">
+        {{ form_row(form.author) }}
+    </div>
+    <div class="my-3">
+        {{ form_row(form.price) }}
+    </div>
+    <div class="my-3">
+        {{ form_row(form.description) }}
+    </div>
+    <div class="my-3">
+        {{ form_row(form.category) }}
+    </div>
+    <div class="my-3">
+        {{ form_row(form.image) }}
+    </div>
+    <div class="my-3">
+        {{ form_row(form.stock) }}
+    </div>
+
+    <button class="btn btn-success mt-3">{{ button_label|default('Enregistrer') }}</button>
 {{ form_end(form) }}
